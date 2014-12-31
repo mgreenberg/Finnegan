@@ -1,0 +1,218 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>Finnegan</title>
+	<meta name="robots" content="noindex,follow">
+	<meta name="description" content="Finnegan App">
+	<meta name="keywords" content="Writing">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+	<style type="text/css">
+
+		body{
+			font-family: Montserrat;
+			font-size: 80px;
+			background-color: #eeeeee;
+			/*pointer-events:none;*/
+		}
+
+		#input{
+			text-align: right;
+			overflow: hidden;
+			white-space: nowrap;
+			position: fixed;
+			top: 40%;
+			right: 51%;
+			outline: 0px solid transparent;
+			white-space: nowrap;
+			color: #111111;
+			resize:none;
+		}
+
+		#textarea{
+			outline: 0px solid transparent;
+			border: none;
+			color: #eeeeee;
+			background-color: #eeeeee;
+			z-index: -1
+		}
+
+		#caret{
+			text-align: right;
+			overflow: hidden;
+			white-space: nowrap;
+			position: fixed;
+			top: 40%;
+			outline: 0px solid transparent;
+			right: 49%;
+			white-space: nowrap;
+			color:blue;
+			resize:none;
+
+		}
+
+		#editor {
+			position: relative;
+			top: 40%;
+			right: 50%;
+			border-radius: 0;
+			background-color: blue;
+			resize: none;
+			border: 0;
+			border: none;
+			box-shadow: none;
+			z-index: 100;
+			padding: 0;
+			margin: 0;
+			overflow-y: hidden;
+			overflow-x: hidden;
+			font: inherit;
+			white-space: pre-wrap;
+			opacity: 0.6;
+			text-align: right;
+			outline: none;
+		}
+
+		#cursor{
+			position: absolute;
+			top: 40%;
+			right: 49%;
+			color: blue;
+			z-index: 0;
+		}
+
+
+		@keyframes flickerAnimation {
+		  0%   { opacity:.9; }
+		  50%  { opacity:0; }
+		  100% { opacity:.9; }
+		}
+		@-o-keyframes flickerAnimation{
+		  0%   { opacity:.9; }
+		  50%  { opacity:0; }
+		  100% { opacity:.9; }
+		}
+		@-moz-keyframes flickerAnimation{
+		  0%   { opacity:.9; }
+		  50%  { opacity:0; }
+		  100% { opacity:.9; }
+		}
+		@-webkit-keyframes flickerAnimation{
+		  0%   { opacity:.9; }
+		  50%  { opacity:0; }
+		  100% { opacity:.9; }
+		}
+
+		.animate-flicker {
+		   -webkit-animation: flickerAnimation 1.5s infinite;
+		   -moz-animation: flickerAnimation 1.5s infinite;
+		   -o-animation: flickerAnimation 1.5s infinite;
+		    animation: flickerAnimation 1.5s infinite;
+		}
+
+		.fadeOut { 
+			position: absolute; 
+			bottom: 0; 
+			left: 0;
+			width: 40%;
+			height: 100%; 
+			text-align: center; 
+			margin: 0; padding: 0px 0; 
+			background: -webkit-linear-gradient(left,rgba(238,238,2385,1),rgba(238,238,238,0)); /*Safari 5.1-6*/
+			background: -o-linear-gradient(right,rgba(238,238,238,1),rgba(238,238,238,0)); /*Opera 11.1-12*/
+			background: -moz-linear-gradient(right,rgba(238,238,238,1),rgba(238,238,238,0)); /*Fx 3.6-15*/
+			background: linear-gradient(to right,rgba(238,238,238,1),rgba(238,238,238,0)); /*Standard*/
+		}
+
+		.copyButton{
+		   position:fixed;
+		   left:0px;
+		   bottom:0px;
+		   height:100px;
+		   width:100%;
+		}
+
+		a { 
+			color: #dddddd;
+			text-align: right;
+			z-index: 1;
+			margin: auto;
+			text-align: center;
+			display: block;
+			font-size: 30px;
+			-moz-border-radius: 15px;
+ 			border-radius: 95px;
+		    border:solid 2px #dddddd;
+		    padding:0px;
+		    width: 120px;
+		    text-decoration: none;
+		    cursor: pointer;
+		    -webkit-transition: color .4s, border .4s;
+		    transition: color .4s, border .4s;
+		}
+
+		a:hover{ 
+			color:#aaaaaa;
+			border: solid 2px #aaaaaa;
+		}
+	</style>
+
+	<script type="text/javascript" language="Javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" language="Javascript">
+		var shifted
+		$( 'document' ).ready(function() {
+		    var random = Math.random().toString(36).substring(7);
+		    console.log(random)
+		    localStorage.getItem("Finnegan");
+		    var testText = ""
+
+			$(document).keydown(function(e){
+				console.log(e.keyCode)
+				var keyboardMap = ["","","","","","","","","BACK_SPACE","","","","","","","","","","","","","","","","","","","","","","",""," ","","","","","","","","","","","","","","","","0","1","2","3","4","5","6","7","8","9",":",";",">","=","<","?","@","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","","","","","","0","1","2","3","4","5","6","7","8","9","","+","_","-",".","/","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","^","!","/","#","$","%","&","_","(",")","*","+","|","-","{","}","~","","","","","","","","","","\;","=","\,","-",".","/","\'","","","","","","","","","","","","","","","","","","","","","","","","","","","[","\\","]","\'","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+				var shiftedKeyboardMap = ["","","","","","","","","BACK_SPACE","","","","","","","","","","","","","","","","","","","","","","",""," ","","","","","","","","","","","","","","","",")","!","@","#","$","%","^","&","*","(",":",";",">","+","<","?","@","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","","","","","",")","!","@","#","$","%","^","&","*","(","","+","_","-",".","?","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","^","!","/","#","$","%","&","_","(",")","*","+","|","-","{","}","~","","","","","","","","","",":","+","<","_",">","?","~","","","","","","","","","","","","","","","","","","","","","","","","","","","{","|","}","\"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""];
+				if (e.keyCode == 16){
+					shifted = true
+					console.log(shifted)
+				}
+				if (e.keyCode == 8){
+					e.preventDefault()
+					testText = testText.substring(0, testText.length - 1);
+				} else {
+					if (shifted){
+						testText += shiftedKeyboardMap[e.keyCode];
+					} else {
+						testText += keyboardMap[e.keyCode].toLowerCase()
+					}					
+				}
+				$("#input").text(testText);
+	  			localStorage.setItem("Finnegan", testText);
+			});
+
+			$(document).keyup(function(e) {
+				if (e.keyCode == 16) {
+					shifted = false
+				} 
+
+			});
+
+			function copyToClipboard(text) {
+			    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+			}
+
+			$('#copyButton').click(function() {
+			    copyToClipboard(testText)
+			});
+		});
+
+	</script>
+
+</head>
+	<body>
+		<div class='faded' id="input" contenteditable="false"></div>
+		<div class= "animate-flicker" id='caret'>|</div>
+		<div class='fadeout'></div>
+		<div class="copyButton">
+			<a id="copyButton">COPY</a>
+		</div>
+	</body>
+</html>
